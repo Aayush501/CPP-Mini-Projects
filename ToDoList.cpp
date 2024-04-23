@@ -191,5 +191,31 @@ void deleteTask(){
 }
 
 void updateTask(){
-
+    system("cls");
+    int id = searchTask();
+    if(id!=0){
+        char update;
+        cout<<"\tUpdate? (Y/N): ";
+        cin>>update;
+        if(update=='y'){
+            ToDoList todo;
+            fstream fin("todo.txt", ios::in | ios::out);
+            fin.seekg(0);
+            while(!fin.eof()){
+                fin>>todo.id;
+                fin.ignore();
+                if(todo.id!=id){
+                    getline(fin, todo.task);
+                }
+                else{
+                    system("cls");
+                    cout<<"Add Updated Task: ";
+                    string updatedTask;
+                    cin>>updatedTask;
+                    getline(fin, todo.task);
+                    return;
+                }
+            }
+        }
+    }
 }
