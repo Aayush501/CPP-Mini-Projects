@@ -135,7 +135,6 @@ int searchTask(){
     cin>>id;
     ToDoList todo;
     fstream fin("todo.txt", ios::in);
-    fin.seekg(0);
     while(!fin.eof()){
         fin>>todo.id;
         fin.ignore();
@@ -145,10 +144,10 @@ int searchTask(){
             cout<<"\t"<<todo.id<<": "<<todo.task<<"\n";
             return id;
         }
-        system("cls");
-        cout<<"Not Found\n";
-        return 0;
     }
+    system("cls");
+    cout<<"Not Found\n";
+    return 0;
 }
 
 void deleteTask(){
@@ -199,23 +198,30 @@ void updateTask(){
         cin>>update;
         if(update=='y'){
             ToDoList todo;
-            fstream fin("todo.txt", ios::in | ios::out);
-            fin.seekg(0);
-            while(!fin.eof()){
+            fstream tempFile("temp.txt", ios::out);
+            fstream fin("todo.txt");
+            while (!fin.eof())
+            {
                 fin>>todo.id;
                 fin.ignore();
-                if(todo.id!=id){
-                    getline(fin, todo.task);
+                getline(fin, todo.task);
+                tempFile << "\n" << todo.id;
+                if(todo.id != id){
+                    tempFile << "\n" << todo.task;
                 }
                 else{
-                    system("cls");
-                    cout<<"Add Updated Task: ";
-                    string updatedTask;
-                    cin>>updatedTask;
-                    getline(fin, todo.task);
-                    return;
+                    cout<<"\tAdd New Task: ";
+                    cin.get();
+                    getline(cin, todo.task);
+                    tempFile << "\n" << todo.task;
                 }
             }
+            fin.close();
+            tempFile.close();
+            remove("todo.txt");
+            rename("temp.txt", "todo.txt");
+            system("cls");
+            cout<<"\n\tUpdated Successfully!\n";
         }
     }
 }
